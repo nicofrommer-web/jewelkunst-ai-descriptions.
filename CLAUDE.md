@@ -107,22 +107,43 @@ Variables: `{ "input": { "id": "gid://shopify/Product/<id>", "descriptionHtml": 
 
 ---
 
-## File Structure (Planned)
+## File Structure
 
 ```
 jewelkunst-ai-descriptions/
 ├── CLAUDE.md                  # This file
-├── .env.example               # Template for environment variables
+├── .env.example               # Template for environment variables (copy to .env)
 ├── .gitignore
+├── package.json               # npm scripts: batch, generate, typecheck, lint
+├── tsconfig.json              # ESM, strict, NodeNext
 ├── src/
-│   ├── generate.ts            # Core description generation logic
-│   ├── shopify.ts             # Shopify API client helpers
-│   └── batch.ts               # Bulk processing orchestration
+│   ├── generate.ts            # generateDescription(client, ProductInput) → HTML string
+│   ├── shopify.ts             # fetchAllProducts(), updateProductDescription()
+│   └── batch.ts               # CLI entry point — orchestrates the full run
 ├── prompts/
-│   └── system.txt             # Brand voice system prompt
-├── output/                    # Generated descriptions (gitignored or tracked)
-└── scripts/
-    └── run-batch.sh           # Entry point for batch jobs
+│   └── system.txt             # Brand voice system prompt (edit to tune tone)
+└── output/                    # Created at runtime, gitignored
+    ├── backups/               # JSON snapshots of all products before any update
+    └── update-log.jsonl       # Append-only log of every generated/updated description
+```
+
+## Running the Generator
+
+```bash
+# Install dependencies
+npm install
+
+# Dry run — generate descriptions but do NOT update Shopify
+DRY_RUN=true npm run batch
+
+# Live run — updates Shopify product descriptions
+npm run batch
+
+# Useful flags
+npm run batch -- --dry-run           # same as DRY_RUN=true
+npm run batch -- --limit 3           # process only 3 products (good for testing)
+npm run batch -- --skip-existing     # skip products that already have a description
+npm run batch -- --limit 3 --dry-run # safe first test
 ```
 
 ---
