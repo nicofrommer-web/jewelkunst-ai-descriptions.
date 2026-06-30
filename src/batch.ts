@@ -52,11 +52,25 @@ function logUpdate(entry: Record<string, unknown>) {
   fs.appendFileSync(LOG_FILE, JSON.stringify(entry) + "\n");
 }
 
+// Read a metafield by trying several likely keys (store setups vary)
+function metafield(p: ShopifyProduct, ...keys: string[]): string | undefined {
+  for (const k of keys) {
+    const v = p.metafields[k.toLowerCase()];
+    if (v?.trim()) return v.trim();
+  }
+  return undefined;
+}
+
 function toProductInput(p: ShopifyProduct): ProductInput {
   return {
     title: p.title,
-    material: p.productType || undefined,
-    collection: p.vendor || undefined,
+    material: metafield(p, "material", "metall") ?? p.productType ?? undefined,
+    gemstone: metafield(p, "gemstone", "edelstein", "stein", "stone"),
+    weight: p.weight ? `${p.weight.value} ${p.weight.unit}` : undefined,
+    dimensions: metafield(p, "dimensions", "maße", "masse", "groesse", "größe"),
+    collection: p.collections[0] ?? (p.vendor || undefined),
+    tags: p.tags.length ? p.tags : undefined,
+    careInstructions: metafield(p, "care", "pflege", "pflegehinweise"),
   };
 }
 

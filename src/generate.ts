@@ -10,8 +10,12 @@ const DEFAULT_MODEL = "claude-sonnet-4-6";
 export interface ProductInput {
   title: string;
   material?: string;
+  gemstone?: string;
+  weight?: string;
   dimensions?: string;
   collection?: string;
+  tags?: string[];
+  careInstructions?: string;
   extraContext?: string;
 }
 
@@ -26,12 +30,16 @@ function loadSystemPrompt(): string {
 }
 
 function buildUserMessage(product: ProductInput): string {
-  const lines = [`Product title: ${product.title}`];
+  const lines = [`Produkttitel: ${product.title}`];
   if (product.material) lines.push(`Material: ${product.material}`);
-  if (product.dimensions) lines.push(`Dimensions/weight: ${product.dimensions}`);
-  if (product.collection) lines.push(`Collection: ${product.collection}`);
-  if (product.extraContext) lines.push(`Additional context: ${product.extraContext}`);
-  lines.push("\nWrite the product description.");
+  if (product.gemstone) lines.push(`Edelstein: ${product.gemstone}`);
+  if (product.weight) lines.push(`Gewicht: ${product.weight}`);
+  if (product.dimensions) lines.push(`Maße: ${product.dimensions}`);
+  if (product.collection) lines.push(`Kollektion: ${product.collection}`);
+  if (product.tags?.length) lines.push(`Schlagwörter: ${product.tags.join(", ")}`);
+  if (product.careInstructions) lines.push(`Pflegehinweise: ${product.careInstructions}`);
+  if (product.extraContext) lines.push(`Zusätzlicher Kontext: ${product.extraContext}`);
+  lines.push("\nSchreibe die Produktbeschreibung.");
   return lines.join("\n");
 }
 
