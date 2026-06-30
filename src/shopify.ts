@@ -7,6 +7,10 @@ export interface ShopifyProduct {
   descriptionHtml: string;
   vendor: string;
   productType: string;
+  tags: string[];
+  collections: string[];
+  weight?: { value: number; unit: string };
+  metafields: Record<string, string>; // keyed by metafield key, lowercased
 }
 
 interface GraphQLResponse<T> {
@@ -61,10 +65,57 @@ const LIST_PRODUCTS_QUERY = `
         descriptionHtml
         vendor
         productType
+        tags
+        collections(first: 5) { nodes { title } }
+        variants(first: 1) { nodes { weight weightUnit } }
+        metafields(first: 20) { nodes { key value } }
       }
     }
   }
 `;
+
+interface ProductNode {
+  id: string;
+  title: string;
+  descriptionHtml: string;
+  vendor: string;
+  productType: string;
+  tags: string[];
+  collections: { nodes: Array<{ title: string }> };
+  variants: { nodes: Array<{ weight: number | null; weightUnit: string }> };
+  metafields: { nodes: Array<{ key: string; value: string } | null> };
+}
+
+interface ProductsPage {
+  products: {
+    pageInfo: { hasNextPage: boolean; endCursor: string };
+    nodes: ProductNode[];
+  };
+}
+
+function mapProduct(node: ProductNode): ShopifyProduct {
+  const variant = node.variants.nodes[0];
+  const metafields: Record<string, string> = {};
+  for (const mf of node.metafields.nodes) {
+    if (mf?.key && mf.value) metafields[mf.key.toLowerCase()] = mf.value;
+  }
+
+  return {
+    id: node.id,
+    numericId: node.id.split("/").pop()!,
+    title: node.title,
+    descriptionHtml: node.descriptionHtml,
+    vendor: node.vendor,
+    productType: node.productType,
+    tags: node.tags,
+    collections: node.collections.nodes.map((c) => c.title),
+    weight:
+      variant?.weight != null && variant.weight > 0
+        ? { value: variant.weight, unit: variant.weightUnit }
+        : undefined,
+    metafields,
+  };
+}
 
 export async function fetchAllProducts(
   domain: string,
@@ -76,22 +127,15 @@ export async function fetchAllProducts(
   let hasMore = true;
 
   while (hasMore) {
-    const data = await graphql<{
-      products: {
-        pageInfo: { hasNextPage: boolean; endCursor: string };
-        nodes: Array<{ id: string; title: string; descriptionHtml: string; vendor: string; productType: string }>;
-      };
-    }>(domain, token, LIST_PRODUCTS_QUERY, { first: pageSize, after: cursor });
+    const data: ProductsPage = await graphql<ProductsPage>(
+      domain,
+      token,
+      LIST_PRODUCTS_QUERY,
+      { first: pageSize, after: cursor }
+    );
 
     for (const node of data.products.nodes) {
-      products.push({
-        id: node.id,
-        numericId: node.id.split("/").pop()!,
-        title: node.title,
-        descriptionHtml: node.descriptionHtml,
-        vendor: node.vendor,
-        productType: node.productType,
-      });
+      products.push(mapProduct(node));
     }
 
     hasMore = data.products.pageInfo.hasNextPage;
