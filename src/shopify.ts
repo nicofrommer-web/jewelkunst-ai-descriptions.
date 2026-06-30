@@ -154,20 +154,27 @@ const UPDATE_DESCRIPTION_MUTATION = `
   }
 `;
 
+export interface ProductSeo {
+  title: string;
+  description: string;
+}
+
 export async function updateProductDescription(
   domain: string,
   token: string,
   productId: string,
-  descriptionHtml: string
+  descriptionHtml: string,
+  seo?: ProductSeo
 ): Promise<void> {
+  const input: Record<string, unknown> = { id: productId, descriptionHtml };
+  if (seo) input.seo = { title: seo.title, description: seo.description };
+
   const data = await graphql<{
     productUpdate: {
       product: { id: string; title: string } | null;
       userErrors: Array<{ field: string[]; message: string }>;
     };
-  }>(domain, token, UPDATE_DESCRIPTION_MUTATION, {
-    input: { id: productId, descriptionHtml },
-  });
+  }>(domain, token, UPDATE_DESCRIPTION_MUTATION, { input });
 
   if (data.productUpdate.userErrors.length) {
     const errs = data.productUpdate.userErrors
