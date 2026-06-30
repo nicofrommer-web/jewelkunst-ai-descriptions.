@@ -98,6 +98,7 @@ npm run batch -- --help
 |---|---|
 | `npm run batch` | Run the generator (pass flags after `--`) |
 | `npm run restore` | Restore descriptions/SEO from a backup (pass flags after `--`) |
+| `npm test` | Run the unit tests (Vitest) |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint over `src` |
 
