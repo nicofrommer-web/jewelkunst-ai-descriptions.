@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "batch": "node --loader ts-node/esm src/batch.ts",
+    "restore": "node --loader ts-node/esm src/restore.ts",
     "generate": "node --loader ts-node/esm src/generate.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/**/*.ts"

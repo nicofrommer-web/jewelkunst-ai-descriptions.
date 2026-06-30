@@ -17,6 +17,7 @@ export interface ShopifyProduct {
   currency?: string;  // ISO 4217, e.g. "EUR"
   sku?: string;
   available?: boolean;
+  seo?: { title: string; description: string }; // current SEO meta (for backups)
 }
 
 interface GraphQLResponse<T> {
@@ -73,6 +74,7 @@ const LIST_PRODUCTS_QUERY = `
         productType
         tags
         onlineStoreUrl
+        seo { title description }
         featuredImage { url }
         priceRangeV2 { minVariantPrice { amount currencyCode } }
         collections(first: 5) { nodes { title } }
@@ -91,6 +93,7 @@ interface ProductNode {
   productType: string;
   tags: string[];
   onlineStoreUrl: string | null;
+  seo: { title: string | null; description: string | null } | null;
   featuredImage: { url: string } | null;
   priceRangeV2: { minVariantPrice: { amount: string; currencyCode: string } } | null;
   collections: { nodes: Array<{ title: string }> };
@@ -139,6 +142,10 @@ function mapProduct(node: ProductNode): ShopifyProduct {
     currency: node.priceRangeV2?.minVariantPrice.currencyCode ?? undefined,
     sku: variant?.sku ?? undefined,
     available: variant?.availableForSale ?? undefined,
+    seo:
+      node.seo && (node.seo.title || node.seo.description)
+        ? { title: node.seo.title ?? "", description: node.seo.description ?? "" }
+        : undefined,
   };
 }
 
