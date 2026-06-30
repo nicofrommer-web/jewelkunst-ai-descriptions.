@@ -15,8 +15,10 @@ import { generateDescription, generateSeo, type ProductInput } from "./generate.
 import {
   fetchAllProducts,
   updateProductDescription,
+  setProductJsonLd,
   type ShopifyProduct,
 } from "./shopify.js";
+import { buildProductJsonLd, htmlToPlainText } from "./jsonld.js";
 
 function hasFlag(name: string): boolean {
   return process.argv.includes(name);
@@ -39,6 +41,8 @@ Options:
   --skip-existing   Skip products that already have a description.
   --seo             Also generate SEO meta title + description (and image
                     alt text) and write seo.title/seo.description to Shopify.
+  --json-ld         Build schema.org/Product JSON-LD and store it in the
+                    product metafield seo.json_ld (for rich snippets).
   --model NAME      Claude model to use. Overrides CLAUDE_MODEL.
                     Default: claude-sonnet-4-6.
                     Tip: claude-haiku-4-5-20251001 for cheap bulk runs.
@@ -57,6 +61,7 @@ if (hasFlag("--help") || hasFlag("-h")) {
 const DRY_RUN = hasFlag("--dry-run") || process.env.DRY_RUN === "true";
 const SKIP_EXISTING = hasFlag("--skip-existing");
 const WITH_SEO = hasFlag("--seo");
+const WITH_JSONLD = hasFlag("--json-ld");
 const LIMIT = (() => {
   const v = flagValue("--limit");
   return v !== undefined ? parseInt(v, 10) : Infinity;
@@ -130,9 +135,27 @@ async function processBatch(
       const seo = WITH_SEO ? await generateSeo(client, input, model) : undefined;
       if (seo) console.log(`  SEO: ${seo.title}`);
 
+      const jsonLd = WITH_JSONLD
+        ? buildProductJsonLd({
+            title: product.title,
+            descriptionPlain: htmlToPlainText(description),
+            url: product.onlineStoreUrl,
+            imageUrl: product.imageUrl,
+            brand: product.vendor || undefined,
+            sku: product.sku,
+            material: input.material,
+            price: product.price,
+            currency: product.currency,
+            available: product.available,
+          })
+        : undefined;
+      if (jsonLd) console.log(`  JSON-LD: schema.org/Product built`);
+
       if (!DRY_RUN) {
         await updateProductDescription(domain, token, product.id, description, seo);
-        console.log(`  Updated on Shopify${seo ? " (incl. SEO)" : ""}`);
+        if (jsonLd) await setProductJsonLd(domain, token, product.id, jsonLd);
+        const extras = [seo && "SEO", jsonLd && "JSON-LD"].filter(Boolean).join(", ");
+        console.log(`  Updated on Shopify${extras ? ` (incl. ${extras})` : ""}`);
       } else {
         console.log(`  [DRY RUN] Skipping Shopify update`);
       }
@@ -144,6 +167,7 @@ async function processBatch(
         dryRun: DRY_RUN,
         description,
         seo,
+        jsonLd,
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
