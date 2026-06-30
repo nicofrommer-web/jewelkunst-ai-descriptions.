@@ -9,15 +9,19 @@
     "restore": "node --loader ts-node/esm src/restore.ts",
     "generate": "node --loader ts-node/esm src/generate.ts",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "dotenv": "^16.4.7"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/node": "^22.0.0",
+    "eslint": "^9.39.4",
+    "globals": "^15.15.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.62.1"
   }
 }
