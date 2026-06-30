@@ -2,12 +2,9 @@
  * Batch description generator.
  *
  * Usage:
- *   npx ts-node src/batch.ts [--dry-run] [--limit N] [--skip-existing]
+ *   npm run batch -- [--dry-run] [--limit N] [--skip-existing] [--model NAME]
  *
- * Options:
- *   --dry-run        Generate descriptions but do NOT write them to Shopify.
- *   --limit N        Process at most N products (useful for test runs).
- *   --skip-existing  Skip products that already have a description.
+ * Run `npm run batch -- --help` for the full option list.
  */
 
 import "dotenv/config";
@@ -21,12 +18,47 @@ import {
   type ShopifyProduct,
 } from "./shopify.js";
 
-const DRY_RUN = process.argv.includes("--dry-run") || process.env.DRY_RUN === "true";
-const SKIP_EXISTING = process.argv.includes("--skip-existing");
+function hasFlag(name: string): boolean {
+  return process.argv.includes(name);
+}
+
+function flagValue(name: string): string | undefined {
+  const idx = process.argv.indexOf(name);
+  return idx !== -1 ? process.argv[idx + 1] : undefined;
+}
+
+const HELP = `Jewelkunst AI Description Generator
+
+Usage:
+  npm run batch -- [options]
+  DRY_RUN=true npm run batch
+
+Options:
+  --dry-run         Generate descriptions but do NOT write them to Shopify.
+  --limit N         Process at most N products (good for test runs).
+  --skip-existing   Skip products that already have a description.
+  --model NAME      Claude model to use. Overrides CLAUDE_MODEL.
+                    Default: claude-sonnet-4-6.
+                    Tip: claude-haiku-4-5-20251001 for cheap bulk runs.
+  -h, --help        Show this help and exit.
+
+Environment (.env):
+  ANTHROPIC_API_KEY, SHOPIFY_SHOP_DOMAIN, SHOPIFY_ACCESS_TOKEN
+  Optional: CLAUDE_MODEL, BATCH_SIZE (default 5), DRY_RUN
+`;
+
+if (hasFlag("--help") || hasFlag("-h")) {
+  console.log(HELP);
+  process.exit(0);
+}
+
+const DRY_RUN = hasFlag("--dry-run") || process.env.DRY_RUN === "true";
+const SKIP_EXISTING = hasFlag("--skip-existing");
 const LIMIT = (() => {
-  const idx = process.argv.indexOf("--limit");
-  return idx !== -1 ? parseInt(process.argv[idx + 1], 10) : Infinity;
+  const v = flagValue("--limit");
+  return v !== undefined ? parseInt(v, 10) : Infinity;
 })();
+const MODEL = flagValue("--model") ?? process.env.CLAUDE_MODEL;
 const BATCH_SIZE = parseInt(process.env.BATCH_SIZE ?? "5", 10);
 const OUTPUT_DIR = "output";
 const BACKUP_DIR = path.join(OUTPUT_DIR, "backups");
@@ -82,12 +114,13 @@ async function processBatch(
   client: Anthropic,
   products: ShopifyProduct[],
   domain: string,
-  token: string
+  token: string,
+  model?: string
 ) {
   for (const product of products) {
     console.log(`\n→ ${product.title} (${product.numericId})`);
     try {
-      const description = await generateDescription(client, toProductInput(product));
+      const description = await generateDescription(client, toProductInput(product), model);
       console.log(`  Generated: ${description.slice(0, 80)}…`);
 
       if (!DRY_RUN) {
@@ -128,6 +161,7 @@ async function main() {
 
   console.log(`\nJewelkunst AI Description Generator`);
   console.log(`Mode: ${DRY_RUN ? "DRY RUN" : "LIVE"}`);
+  console.log(`Model: ${MODEL ?? "claude-sonnet-4-6 (default)"}`);
   console.log(`Fetching products from ${domain}…`);
 
   const allProducts = await fetchAllProducts(domain, token);
@@ -150,7 +184,7 @@ async function main() {
   for (let i = 0; i < targets.length; i += BATCH_SIZE) {
     const batch = targets.slice(i, i + BATCH_SIZE);
     console.log(`\nBatch ${Math.floor(i / BATCH_SIZE) + 1} / ${Math.ceil(targets.length / BATCH_SIZE)}`);
-    await processBatch(client, batch, domain, token);
+    await processBatch(client, batch, domain, token, MODEL);
   }
 
   console.log(`\nDone. Log → ${LOG_FILE}`);
