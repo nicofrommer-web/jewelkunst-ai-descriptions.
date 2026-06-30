@@ -97,6 +97,7 @@ npm run batch -- --help
 | Script | Purpose |
 |---|---|
 | `npm run batch` | Run the generator (pass flags after `--`) |
+| `npm run restore` | Restore descriptions/SEO from a backup (pass flags after `--`) |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint over `src` |
 
@@ -114,6 +115,31 @@ output/
 
 The backup is your safety net — every run snapshots all products before
 writing anything.
+
+### Restoring from a backup
+
+If a live run produced bad output, roll back with the restore script. It
+writes the descriptions (and SEO meta) from a backup snapshot back to Shopify.
+
+```bash
+# Preview a restore from the newest backup (writes nothing)
+npm run restore -- --dry-run
+
+# Restore from the newest backup
+npm run restore
+
+# Restore from a specific file, limited to 3 products
+npm run restore -- --file output/backups/backup-1717000000000.json --limit 3
+```
+
+| Flag | Effect |
+|---|---|
+| `--file PATH` | Backup to restore from (default: newest in `output/backups`) |
+| `--dry-run` | Show what would be restored without writing |
+| `--limit N` | Restore at most `N` products |
+| `-h`, `--help` | Print help and exit |
+
+Restores are logged to `output/restore-log.jsonl`.
 
 ---
 
@@ -158,7 +184,8 @@ jewelkunst-ai-descriptions/
 │   ├── generate.ts            # generateDescription() + generateSeo()
 │   ├── jsonld.ts              # buildProductJsonLd() — schema.org/Product
 │   ├── shopify.ts             # fetch products + write description/seo/metafields
-│   └── batch.ts               # CLI entry point
+│   ├── batch.ts               # CLI entry point — generate & publish
+│   └── restore.ts             # CLI entry point — roll back from a backup
 ├── prompts/
 │   └── system.txt             # German brand-voice system prompt
 └── output/                    # backups + update log (runtime, git-ignored)
