@@ -11,7 +11,7 @@ import "dotenv/config";
 import fs from "fs";
 import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
-import { generateDescription, type ProductInput } from "./generate.js";
+import { generateDescription, generateSeo, type ProductInput } from "./generate.js";
 import {
   fetchAllProducts,
   updateProductDescription,
@@ -37,6 +37,8 @@ Options:
   --dry-run         Generate descriptions but do NOT write them to Shopify.
   --limit N         Process at most N products (good for test runs).
   --skip-existing   Skip products that already have a description.
+  --seo             Also generate SEO meta title + description (and image
+                    alt text) and write seo.title/seo.description to Shopify.
   --model NAME      Claude model to use. Overrides CLAUDE_MODEL.
                     Default: claude-sonnet-4-6.
                     Tip: claude-haiku-4-5-20251001 for cheap bulk runs.
@@ -54,6 +56,7 @@ if (hasFlag("--help") || hasFlag("-h")) {
 
 const DRY_RUN = hasFlag("--dry-run") || process.env.DRY_RUN === "true";
 const SKIP_EXISTING = hasFlag("--skip-existing");
+const WITH_SEO = hasFlag("--seo");
 const LIMIT = (() => {
   const v = flagValue("--limit");
   return v !== undefined ? parseInt(v, 10) : Infinity;
@@ -120,12 +123,16 @@ async function processBatch(
   for (const product of products) {
     console.log(`\n→ ${product.title} (${product.numericId})`);
     try {
-      const description = await generateDescription(client, toProductInput(product), model);
+      const input = toProductInput(product);
+      const description = await generateDescription(client, input, model);
       console.log(`  Generated: ${description.slice(0, 80)}…`);
 
+      const seo = WITH_SEO ? await generateSeo(client, input, model) : undefined;
+      if (seo) console.log(`  SEO: ${seo.title}`);
+
       if (!DRY_RUN) {
-        await updateProductDescription(domain, token, product.id, description);
-        console.log(`  Updated on Shopify`);
+        await updateProductDescription(domain, token, product.id, description, seo);
+        console.log(`  Updated on Shopify${seo ? " (incl. SEO)" : ""}`);
       } else {
         console.log(`  [DRY RUN] Skipping Shopify update`);
       }
@@ -136,6 +143,7 @@ async function processBatch(
         title: product.title,
         dryRun: DRY_RUN,
         description,
+        seo,
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
