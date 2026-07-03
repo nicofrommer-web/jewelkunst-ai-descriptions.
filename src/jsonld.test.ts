@@ -122,3 +122,120 @@ describe("renderJsonLdScript", () => {
     expect(parsed.offers.priceCurrency).toBe("EUR");
   });
 });
+
+describe("buildProductJsonLd — HoloGlow variants & compliance", () => {
+  const base = {
+    descriptionPlain:
+      "Holografischer Farbwechsel durch PrismaShift-Beschichtung, sichtbar je nach Licht und Winkel. Edelstahl, hypoallergen.",
+    imageUrl: "https://cdn.hologlow.example/prisma.jpg",
+    brand: "HoloGlow",
+    material: "Edelstahl",
+    currency: "EUR",
+    available: true,
+    url: "https://hologlow.example/products/prisma-necklace",
+  };
+
+  const single = buildProductJsonLd({ ...base, title: "HoloGlow Prisma Necklace — Single", sku: "HG-1", price: "29.90" });
+  const duo = buildProductJsonLd({ ...base, title: "HoloGlow Prisma Necklace — Duo-Pack", sku: "HG-2", price: "49.90" });
+  const creator = buildProductJsonLd({ ...base, title: "HoloGlow Prisma Necklace — Creator-Pack", sku: "HG-3", price: "79.90" });
+
+  it("carries the core Product fields for each tier", () => {
+    for (const [obj, price] of [[single, "29.90"], [duo, "49.90"], [creator, "79.90"]] as const) {
+      expect(obj["@type"]).toBe("Product");
+      expect(obj.brand).toEqual({ "@type": "Brand", name: "HoloGlow" });
+      expect(obj.image).toBe(base.imageUrl);
+      expect(obj.material).toBe("Edelstahl");
+      const offers = obj.offers as Record<string, unknown>;
+      expect(offers.price).toBe(price);
+      expect(offers.priceCurrency).toBe("EUR");
+      expect(offers.availability).toBe("https://schema.org/InStock");
+    }
+  });
+
+  it("never fabricates reviews or ratings in the structured data", () => {
+    for (const obj of [single, duo, creator]) {
+      expect(obj).not.toHaveProperty("review");
+      expect(obj).not.toHaveProperty("reviews");
+      expect(obj).not.toHaveProperty("aggregateRating");
+    }
+  });
+
+  it("passes the description through verbatim — no injected claims", () => {
+    // The builder only serializes what it is given; it must never add mood/energy
+    // language or reviews on its own. Whatever the caller supplies is what ships.
+    expect(single.description).toBe(base.descriptionPlain);
+    const serialized = JSON.stringify(single).toLowerCase();
+    for (const forbidden of ["stimmung", "energie", "mood", "aggregaterating", '"review"']) {
+      expect(serialized).not.toContain(forbidden);
+    }
+  });
+
+  it("matches the snapshot for each HoloGlow tier", () => {
+    expect(single).toMatchInlineSnapshot(`
+      {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "brand": {
+          "@type": "Brand",
+          "name": "HoloGlow",
+        },
+        "description": "Holografischer Farbwechsel durch PrismaShift-Beschichtung, sichtbar je nach Licht und Winkel. Edelstahl, hypoallergen.",
+        "image": "https://cdn.hologlow.example/prisma.jpg",
+        "material": "Edelstahl",
+        "name": "HoloGlow Prisma Necklace — Single",
+        "offers": {
+          "@type": "Offer",
+          "availability": "https://schema.org/InStock",
+          "price": "29.90",
+          "priceCurrency": "EUR",
+          "url": "https://hologlow.example/products/prisma-necklace",
+        },
+        "sku": "HG-1",
+      }
+    `);
+    expect(duo).toMatchInlineSnapshot(`
+      {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "brand": {
+          "@type": "Brand",
+          "name": "HoloGlow",
+        },
+        "description": "Holografischer Farbwechsel durch PrismaShift-Beschichtung, sichtbar je nach Licht und Winkel. Edelstahl, hypoallergen.",
+        "image": "https://cdn.hologlow.example/prisma.jpg",
+        "material": "Edelstahl",
+        "name": "HoloGlow Prisma Necklace — Duo-Pack",
+        "offers": {
+          "@type": "Offer",
+          "availability": "https://schema.org/InStock",
+          "price": "49.90",
+          "priceCurrency": "EUR",
+          "url": "https://hologlow.example/products/prisma-necklace",
+        },
+        "sku": "HG-2",
+      }
+    `);
+    expect(creator).toMatchInlineSnapshot(`
+      {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "brand": {
+          "@type": "Brand",
+          "name": "HoloGlow",
+        },
+        "description": "Holografischer Farbwechsel durch PrismaShift-Beschichtung, sichtbar je nach Licht und Winkel. Edelstahl, hypoallergen.",
+        "image": "https://cdn.hologlow.example/prisma.jpg",
+        "material": "Edelstahl",
+        "name": "HoloGlow Prisma Necklace — Creator-Pack",
+        "offers": {
+          "@type": "Offer",
+          "availability": "https://schema.org/InStock",
+          "price": "79.90",
+          "priceCurrency": "EUR",
+          "url": "https://hologlow.example/products/prisma-necklace",
+        },
+        "sku": "HG-3",
+      }
+    `);
+  });
+});
