@@ -261,6 +261,51 @@ Für die ersten 1-2 Kunden, wenn noch kein Proof existiert, senkt ein ergebnisba
 
 **Trade-off, den man kennen sollte:** Reines Pay-per-Result verschiebt das gesamte Risiko (Zeit, Ad-Budget, Vorleistung) auf die Agentur. Nur anbieten, wenn die Kapazität da ist, 14 Tage lang ohne garantierte Bezahlung zu arbeiten.
 
+### 1-Stunden-Sofortaktivierung (Performance-Offer an warme Kontakte)
+
+Für den Tag, an dem schnell die ersten 1-2 Performance-Kunden gebucht werden sollen. Nutzt echte, aktuelle Kapazität als Dringlichkeit — `[X]` beim Versenden durch die tatsächliche Anzahl freier Slots ersetzen, nicht durch eine erfundene Zahl (siehe Hinweis unten).
+
+**1) An warme Leads / frühere Kunden (WhatsApp, Insta, Messenger, E-Mail):**
+```
+Hey, kurze Info:
+Ich habe aktuell [X] Performance-Slots offen:
+Ich bringe dir 7–15 qualifizierte Termine in 14 Tagen.
+Du zahlst nur für Ergebnisse – kein Retainer.
+
+Bei Zusage diese Woche:
+– Priorisierte Umsetzung
+– [Sonderpreis, falls tatsächlich befristet] statt [Normalpreis]
+
+Willst du den Slot?
+```
+
+**2) An warme Business-Kontakte:**
+```
+Ich habe aktuell [X] Performance-Slots frei.
+Ich liefere dir 7–15 qualifizierte Termine in 14 Tagen.
+[Preis] – Rest nach Ergebnis.
+
+Wenn du willst, blocke ich dich ein.
+```
+
+**3) An kalte Leads:**
+```
+Kurze Frage:
+Soll ich euch 7–15 qualifizierte Termine in 14 Tagen bringen?
+Aktuell [X] Performance-Slots frei.
+
+Wenn ja, schicke ich dir die Details.
+```
+
+**Ablauf (nächste 60 Minuten):**
+1. Nachricht 1 an alle warmen Leads senden (WhatsApp, Insta, Messenger, E-Mail)
+2. Nachricht 3 an kalte Leads aus der Pipeline senden
+3. Nach 10 Minuten: kurzes Follow-up an alle, die die Nachricht gesehen/geöffnet haben
+4. Proof senden, falls vorhanden (siehe Abschnitt 7) — ohne echten Proof diesen Schritt auslassen statt zu improvisieren
+5. Call anbieten: "Lass uns 10 Minuten sprechen, ich zeig dir genau, wie's funktioniert."
+
+**Wichtig — `[X]` und Preise immer wahrheitsgemäß befüllen:** Eine feste Slot-Zahl oder ein "nur heute"-Sonderpreis fest in die Vorlage zu schreiben, würde bei jeder erneuten Nutzung wieder als "heute" behauptet werden — das ist irreführende Werbung nach §5 UWG, sobald es nicht mehr stimmt. Nur eine Zahl eintragen, die an dem Tag tatsächlich der echten freien Kapazität entspricht.
+
 ---
 
 ## 5. CRM System (Google Sheets)
