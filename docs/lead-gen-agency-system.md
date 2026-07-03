@@ -97,6 +97,15 @@ Ich baue genau dafür Systeme – kein klassisches Marketing, sondern
 ein Lead-System, das läuft. Interesse an einem kurzen Austausch?
 ```
 
+**DM 4 — Minimal (für sehr schnelle Ansprache in Serie)**
+```
+Hey, [Dein Name] hier. Kurze Frage:
+Soll ich euch 7–15 qualifizierte Termine in 14 Tagen bringen?
+Kein Retainer, nur Ergebnisse.
+```
+CTA-Zusatz: *"Wenn ja, schicke ich dir kurz die Details."*
+Nutzen für sehr hohes Sende-Volumen (50+/Tag) — kürzer als DM 1-3, dadurch weniger Personalisierungsaufwand, aber auch niedrigere Reply-Qualität. Für Serien-Versand nutzen, DM 1-3 für gezielte Top-Leads.
+
 ### 3 Cold-E-Mail-Templates
 
 **E-Mail 1 — Kurz & direkt**
@@ -172,6 +181,20 @@ Viele Grüße
 
 **Faustregel:** Nach Tag 14 in CRM als "kalt" markieren, nach 60 Tagen erneut anschreiben mit neuem Winkel (z. B. Case Study eines anderen Betriebs).
 
+### Follow-up-Sequenz — Variante B (kompakter, 7 Tage)
+
+Alternative zur 5-Schritte-Sequenz oben, wenn schneller Proof vorhanden ist und mit höherem Volumen gearbeitet wird:
+
+| Tag | Fokus | Beispiel |
+|---|---|---|
+| Tag 1 | Proof | "Kurzer Proof: Letzte Woche [X] Termine für einen [Branche]-Betrieb in [Y] Tagen." |
+| Tag 2 | Value-Drop | Ein konkreter, nützlicher Tipp zur Anfragen-Generierung, ohne Verkaufsabsicht |
+| Tag 3 | Mini-Case | Kurze Fallbeschreibung eines vergleichbaren Betriebs (2-3 Sätze) |
+| Tag 5 | Soft Close | "Würde es Sinn machen, das für [Firma] auch aufzusetzen?" |
+| Tag 7 | Breakup Message | Wie Tag-14-Schritt oben, nur früher |
+
+**Nur mit echtem Proof nutzen:** Der Proof-Schritt (Tag 1) funktioniert nur mit tatsächlichen Ergebnissen. Erfundene oder hochgerechnete Zahlen als Proof zu verschicken ist irreführende Werbung und riskiert den Ruf des Betriebs — lieber ehrlich mit "noch im Aufbau" arbeiten, bis reale Zahlen vorliegen (siehe Abschnitt 7).
+
 ---
 
 ## 3. Sales System
@@ -227,6 +250,16 @@ Viele Grüße
 | **Premium** | 3.000 € einmalig + laufende Betreuung | Alles aus Growth + Multi-Channel (Meta + Google + lokale Verzeichnisse) + CRM-Integration + Follow-up-Automatisierung für eingehende Leads + monatliche Strategie-Calls | Größere Betriebe (15-30 MA), die skalieren wollen, mehrere Standorte/Teams |
 
 **Wichtig für die Preis-Rechtfertigung:** Immer den ROI in Relation zum durchschnittlichen Auftragswert des Kunden setzen (z. B. eine durchschnittliche PV-Anlage oder Dachsanierung liegt bei 8.000–25.000 € — ein einziger zusätzlicher Auftrag deckt das gesamte Investment mehrfach).
+
+### Alternative: Performance-Offer (für den allerersten Kunden)
+
+Für die ersten 1-2 Kunden, wenn noch kein Proof existiert, senkt ein ergebnisbasiertes Angebot die Einstiegshürde stärker als die Preisstufen oben:
+
+> "Wir liefern dir 7–15 qualifizierte Termine in 14 Tagen. Kein Retainer — du zahlst nur für Ergebnisse."
+
+**Wann sinnvoll:** Nur für die ersten Kunden ohne Referenzen, um schnell echten Proof zu erzeugen. Danach zurück auf die Preisstufen-Struktur wechseln, sonst bleibt die Marge zu niedrig und das Risiko (Vorleistung ohne Garantie auf Zahlung) zu hoch.
+
+**Trade-off, den man kennen sollte:** Reines Pay-per-Result verschiebt das gesamte Risiko (Zeit, Ad-Budget, Vorleistung) auf die Agentur. Nur anbieten, wenn die Kapazität da ist, 14 Tage lang ohne garantierte Bezahlung zu arbeiten.
 
 ---
 
@@ -295,3 +328,36 @@ Viele Grüße
 ---
 
 **Wichtigster Hebel in den ersten 14 Tagen:** Konsequenz bei Follow-ups schlägt Lead-Volumen — die meisten Abschlüsse kommen zwischen Follow-up 2 und 4, nicht beim Erstkontakt. Nicht aufgeben, wenn Tag 1-3 wenig Resonanz kommt.
+
+**Aggressivere Daily-Action-Variante** (für höheres Volumen ab Tag 8, wenn Prozesse eingespielt sind):
+- 50–100 Outreach-DMs/Tag (statt 15-20) — nur mit DM 4 (Minimal-Template) realistisch machbar, sonst leidet die Personalisierung
+- 10 Follow-ups/Tag
+- 3 Proof-Drops/Tag (nur mit echten Zahlen, siehe Abschnitt 7)
+- 1 Deadline-Reminder/Tag an warme Leads: "Wir nehmen diesen Monat nur [X] neue Kunden an. Soll ich euch einplanen?"
+
+Dieses Volumen erfordert Zeit-Investment von 3-4h/Tag reine Outreach-Arbeit — realistisch erst ab Tag 8-10, wenn Lead-Recherche und Follow-up-Tracking bereits eingespielt sind.
+
+---
+
+## 7. Proof & Social Proof
+
+Proof ist der stärkste Hebel im gesamten System — aber nur, wenn er echt ist. Ein erfundener Screenshot oder hochgerechnete Zahlen sind irreführende Werbung (Gefahr: Abmahnung, Vertrauensverlust, Rufschaden für den Handwerksbetrieb, dessen Namen man nennt).
+
+**So baut man echten Proof auf, so früh wie möglich:**
+1. Beim ersten Kunden (ggf. über das Performance-Offer aus Abschnitt 4) tatsächliche Ergebnisse dokumentieren: Anzahl Termine, Zeitraum, Branche.
+2. Screenshot aus dem CRM-Sheet (Pipeline-Ansicht mit "Call gebucht"-Status) oder aus dem Kalender (gebuchte Termine) als Proof verwenden — reale Daten, keine Mockups.
+3. Proof-Format, sobald Daten vorliegen:
+   > "Letzte Woche: [X] Termine in [Y] Tagen für einen [Branche]-Betrieb in [Region]. Durchschnittlicher Auftragswert der Branche: [Z] €."
+4. Bis echter Proof existiert: Ehrlich bleiben. Alternative Formulierung ohne Zahlen: "Wir bauen aktuell die ersten Kundenreferenzen in der Region auf — dafür bieten wir das Performance-Offer aus Abschnitt 4 an."
+
+---
+
+## 8. Termin-Funnel (Mini-Landingpage)
+
+Einfache Ein-Seiten-Landingpage als Ziel für die CTA-Links in DMs/E-Mails, sobald genug Volumen läuft, um eine dedizierte Seite zu rechtfertigen. Drei Elemente, mehr nicht:
+
+1. **Hook** (oben, groß): Das Kernversprechen, z. B. "7–15 qualifizierte Termine in 14 Tagen für [Branche]-Betriebe in [Region]"
+2. **Proof** (Mitte): Screenshot/Mini-Case aus Abschnitt 7 — nur echte Daten, sobald vorhanden. Ohne Proof: Kurzbeschreibung des Systems statt Zahlen.
+3. **CTA** (unten, wiederholt): Ein einziger Call-to-Action-Button — "15-Min-Call buchen" (Verlinkung zu Calendly o. ä.). Kein Formular mit vielen Feldern, keine Ablenkung durch Navigation/Zusatzlinks.
+
+**Technischer Hinweis:** Für den Start reicht ein einfacher Landingpage-Baukasten (z. B. Carrd, Notion-Seite mit Custom-Domain) — kein individuelles Webprojekt nötig, bis das Volumen es rechtfertigt.
