@@ -265,16 +265,21 @@ Für die ersten 1-2 Kunden, wenn noch kein Proof existiert, senkt ein ergebnisba
 
 Für den Tag, an dem schnell die ersten 1-2 Performance-Kunden gebucht werden sollen. Nutzt echte, aktuelle Kapazität als Dringlichkeit — `[X]` beim Versenden durch die tatsächliche Anzahl freier Slots ersetzen, nicht durch eine erfundene Zahl (siehe Hinweis unten).
 
+**Zahlungsmodell:**
+- `[Betrag]` € Anzahlung bei Zusage
+- Rest nach Ergebnis (nach Lieferung der 7–15 Termine)
+- Zahlungslink: `[Zahlungslink hier einfügen]`
+
+Hinweis zur Formulierung: Eine Anzahlung vor Leistungsbeginn ist ein legitimes Modell — aber dann nicht gleichzeitig als "kein Risiko" für den Kunden bewerben, das ist ein Widerspruch (der Kunde trägt mit einer Anzahlung sehr wohl ein Risiko). Ehrlicher: "Anzahlung, Rest nach Ergebnis" ohne Risiko-Versprechen, oder ein echtes Rückerstattungsversprechen definieren, falls das angeboten wird.
+
 **1) An warme Leads / frühere Kunden (WhatsApp, Insta, Messenger, E-Mail):**
 ```
 Hey, kurze Info:
 Ich habe aktuell [X] Performance-Slots offen:
 Ich bringe dir 7–15 qualifizierte Termine in 14 Tagen.
-Du zahlst nur für Ergebnisse – kein Retainer.
+[Betrag] € Anzahlung, Rest nach Ergebnis.
 
-Bei Zusage diese Woche:
-– Priorisierte Umsetzung
-– [Sonderpreis, falls tatsächlich befristet] statt [Normalpreis]
+Zahlungslink: [Zahlungslink hier einfügen]
 
 Willst du den Slot?
 ```
@@ -283,28 +288,35 @@ Willst du den Slot?
 ```
 Ich habe aktuell [X] Performance-Slots frei.
 Ich liefere dir 7–15 qualifizierte Termine in 14 Tagen.
-[Preis] – Rest nach Ergebnis.
+[Betrag] € Anzahlung – Rest nach Ergebnis.
 
-Wenn du willst, blocke ich dich ein.
+Zahlungslink: [Zahlungslink hier einfügen]
 ```
 
 **3) An kalte Leads:**
 ```
 Kurze Frage:
 Soll ich euch 7–15 qualifizierte Termine in 14 Tagen bringen?
-Aktuell [X] Performance-Slots frei.
+Aktuell [X] Performance-Slots frei, [Betrag] € Anzahlung.
 
-Wenn ja, schicke ich dir die Details.
+Wenn ja, schicke ich dir den Zahlungslink.
 ```
+
+**Follow-up nach ~10 Minuten (an alle, die reagiert/geöffnet haben):**
+```
+Kurzer Reminder: Falls du den Slot willst, sichere ihn dir jetzt.
+Zahlungslink: [Zahlungslink hier einfügen]
+```
+Proof (echte Zahlen, siehe Abschnitt 7) nur ergänzen, wenn tatsächlich schon ein Kunde beliefert wurde — vorher diesen Teil weglassen statt eine Zahl zu erfinden.
 
 **Ablauf (nächste 60 Minuten):**
 1. Nachricht 1 an alle warmen Leads senden (WhatsApp, Insta, Messenger, E-Mail)
 2. Nachricht 3 an kalte Leads aus der Pipeline senden
-3. Nach 10 Minuten: kurzes Follow-up an alle, die die Nachricht gesehen/geöffnet haben
+3. Nach 10 Minuten: Follow-up-Nachricht an alle, die reagiert/geöffnet haben
 4. Proof senden, falls vorhanden (siehe Abschnitt 7) — ohne echten Proof diesen Schritt auslassen statt zu improvisieren
 5. Call anbieten: "Lass uns 10 Minuten sprechen, ich zeig dir genau, wie's funktioniert."
 
-**Wichtig — `[X]` und Preise immer wahrheitsgemäß befüllen:** Eine feste Slot-Zahl oder ein "nur heute"-Sonderpreis fest in die Vorlage zu schreiben, würde bei jeder erneuten Nutzung wieder als "heute" behauptet werden — das ist irreführende Werbung nach §5 UWG, sobald es nicht mehr stimmt. Nur eine Zahl eintragen, die an dem Tag tatsächlich der echten freien Kapazität entspricht.
+**Wichtig — `[X]`, Beträge und Proof-Zahlen immer wahrheitsgemäß befüllen:** Eine feste Slot-Zahl oder ein "nur heute"-Sonderpreis fest in die Vorlage zu schreiben, würde bei jeder erneuten Nutzung wieder als "heute" behauptet werden — das ist irreführende Werbung nach §5 UWG, sobald es nicht mehr stimmt. Dasselbe gilt für Proof-Zahlen ("X Termine in Y Tagen für einen Kunden") — nur eintragen, wenn es ein tatsächlich beliefertes Ergebnis ist, nie als Platzhalter-Beispiel mit erfundenen Zahlen verschicken.
 
 ---
 
