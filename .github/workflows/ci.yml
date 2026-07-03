@@ -6,9 +6,14 @@ on:
   pull_request:
     branches: [main]
 
+# Least privilege: the workflow only needs to read the repository.
+permissions:
+  contents: read
+
 jobs:
   checks:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
