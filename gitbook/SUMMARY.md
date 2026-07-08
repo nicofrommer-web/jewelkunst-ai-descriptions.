@@ -8,12 +8,20 @@
 * [Website-Struktur](docs/website-structure.md)
 * [SEO-Plan](docs/seo-plan.md)
 
-## Content & Vorlagen
+## Website-Inhalte
 
+* [Startseite](docs/homepage.md)
+* [Kategorie-Seiten](docs/category-pages.md)
 * [Produktbeschreibung-Vorlage](docs/product-description-template.md)
+* [Produktseiten-Vorlage](docs/product-page-template.md)
 * [FAQ](docs/faq.md)
+
+## Marketing & Umsatz
+
+* [Sofort-Umsatz-System](docs/social-media-plan.md)
 
 ## Conversion & Recht
 
 * [Conversions-Checkliste](docs/conversion-checklist.md)
 * [Rechtliche Platzhalter](docs/legal-placeholders.md)
+* [Nächste Schritte](docs/naechste-schritte.md)
