@@ -7,6 +7,17 @@ export interface ShopifyProduct {
   descriptionHtml: string;
   vendor: string;
   productType: string;
+  tags: string[];
+  collections: string[];
+  weight?: { value: number; unit: string };
+  metafields: Record<string, string>; // keyed by metafield key, lowercased
+  imageUrl?: string;
+  onlineStoreUrl?: string;
+  price?: string;     // decimal string, e.g. "34.99"
+  currency?: string;  // ISO 4217, e.g. "EUR"
+  sku?: string;
+  available?: boolean;
+  seo?: { title: string; description: string }; // current SEO meta (for backups)
 }
 
 interface GraphQLResponse<T> {
@@ -61,10 +72,82 @@ const LIST_PRODUCTS_QUERY = `
         descriptionHtml
         vendor
         productType
+        tags
+        onlineStoreUrl
+        seo { title description }
+        featuredImage { url }
+        priceRangeV2 { minVariantPrice { amount currencyCode } }
+        collections(first: 5) { nodes { title } }
+        variants(first: 1) { nodes { weight weightUnit sku availableForSale } }
+        metafields(first: 20) { nodes { key value } }
       }
     }
   }
 `;
+
+interface ProductNode {
+  id: string;
+  title: string;
+  descriptionHtml: string;
+  vendor: string;
+  productType: string;
+  tags: string[];
+  onlineStoreUrl: string | null;
+  seo: { title: string | null; description: string | null } | null;
+  featuredImage: { url: string } | null;
+  priceRangeV2: { minVariantPrice: { amount: string; currencyCode: string } } | null;
+  collections: { nodes: Array<{ title: string }> };
+  variants: {
+    nodes: Array<{
+      weight: number | null;
+      weightUnit: string;
+      sku: string | null;
+      availableForSale: boolean;
+    }>;
+  };
+  metafields: { nodes: Array<{ key: string; value: string } | null> };
+}
+
+interface ProductsPage {
+  products: {
+    pageInfo: { hasNextPage: boolean; endCursor: string };
+    nodes: ProductNode[];
+  };
+}
+
+function mapProduct(node: ProductNode): ShopifyProduct {
+  const variant = node.variants.nodes[0];
+  const metafields: Record<string, string> = {};
+  for (const mf of node.metafields.nodes) {
+    if (mf?.key && mf.value) metafields[mf.key.toLowerCase()] = mf.value;
+  }
+
+  return {
+    id: node.id,
+    numericId: node.id.split("/").pop()!,
+    title: node.title,
+    descriptionHtml: node.descriptionHtml,
+    vendor: node.vendor,
+    productType: node.productType,
+    tags: node.tags,
+    collections: node.collections.nodes.map((c) => c.title),
+    weight:
+      variant?.weight != null && variant.weight > 0
+        ? { value: variant.weight, unit: variant.weightUnit }
+        : undefined,
+    metafields,
+    imageUrl: node.featuredImage?.url ?? undefined,
+    onlineStoreUrl: node.onlineStoreUrl ?? undefined,
+    price: node.priceRangeV2?.minVariantPrice.amount ?? undefined,
+    currency: node.priceRangeV2?.minVariantPrice.currencyCode ?? undefined,
+    sku: variant?.sku ?? undefined,
+    available: variant?.availableForSale ?? undefined,
+    seo:
+      node.seo && (node.seo.title || node.seo.description)
+        ? { title: node.seo.title ?? "", description: node.seo.description ?? "" }
+        : undefined,
+  };
+}
 
 export async function fetchAllProducts(
   domain: string,
@@ -76,22 +159,15 @@ export async function fetchAllProducts(
   let hasMore = true;
 
   while (hasMore) {
-    const data = await graphql<{
-      products: {
-        pageInfo: { hasNextPage: boolean; endCursor: string };
-        nodes: Array<{ id: string; title: string; descriptionHtml: string; vendor: string; productType: string }>;
-      };
-    }>(domain, token, LIST_PRODUCTS_QUERY, { first: pageSize, after: cursor });
+    const data: ProductsPage = await graphql<ProductsPage>(
+      domain,
+      token,
+      LIST_PRODUCTS_QUERY,
+      { first: pageSize, after: cursor }
+    );
 
     for (const node of data.products.nodes) {
-      products.push({
-        id: node.id,
-        numericId: node.id.split("/").pop()!,
-        title: node.title,
-        descriptionHtml: node.descriptionHtml,
-        vendor: node.vendor,
-        productType: node.productType,
-      });
+      products.push(mapProduct(node));
     }
 
     hasMore = data.products.pageInfo.hasNextPage;
@@ -110,25 +186,75 @@ const UPDATE_DESCRIPTION_MUTATION = `
   }
 `;
 
+export interface ProductSeo {
+  title: string;
+  description: string;
+}
+
 export async function updateProductDescription(
   domain: string,
   token: string,
   productId: string,
-  descriptionHtml: string
+  descriptionHtml: string,
+  seo?: ProductSeo
 ): Promise<void> {
+  const input: Record<string, unknown> = { id: productId, descriptionHtml };
+  if (seo) input.seo = { title: seo.title, description: seo.description };
+
   const data = await graphql<{
     productUpdate: {
       product: { id: string; title: string } | null;
       userErrors: Array<{ field: string[]; message: string }>;
     };
-  }>(domain, token, UPDATE_DESCRIPTION_MUTATION, {
-    input: { id: productId, descriptionHtml },
-  });
+  }>(domain, token, UPDATE_DESCRIPTION_MUTATION, { input });
 
   if (data.productUpdate.userErrors.length) {
     const errs = data.productUpdate.userErrors
       .map((e) => `${e.field.join(".")}: ${e.message}`)
       .join("; ");
     throw new Error(`Shopify userErrors for ${productId}: ${errs}`);
+  }
+}
+
+const SET_METAFIELD_MUTATION = `
+  mutation metafieldsSet($metafields: [MetafieldsSetInput!]!) {
+    metafieldsSet(metafields: $metafields) {
+      metafields { id }
+      userErrors { field message }
+    }
+  }
+`;
+
+// Stores the JSON-LD object in a product metafield (namespace "seo", key
+// "json_ld", type "json"). The theme renders it with a one-line snippet —
+// see the PR description. Keeps structured data out of body_html.
+export async function setProductJsonLd(
+  domain: string,
+  token: string,
+  productId: string,
+  jsonLd: Record<string, unknown>
+): Promise<void> {
+  const data = await graphql<{
+    metafieldsSet: {
+      metafields: Array<{ id: string }> | null;
+      userErrors: Array<{ field: string[]; message: string }>;
+    };
+  }>(domain, token, SET_METAFIELD_MUTATION, {
+    metafields: [
+      {
+        ownerId: productId,
+        namespace: "seo",
+        key: "json_ld",
+        type: "json",
+        value: JSON.stringify(jsonLd),
+      },
+    ],
+  });
+
+  if (data.metafieldsSet.userErrors.length) {
+    const errs = data.metafieldsSet.userErrors
+      .map((e) => `${e.field.join(".")}: ${e.message}`)
+      .join("; ");
+    throw new Error(`Shopify metafield userErrors for ${productId}: ${errs}`);
   }
 }
