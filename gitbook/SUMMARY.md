@@ -19,9 +19,11 @@
 ## Marketing & Umsatz
 
 * [Sofort-Umsatz-System](docs/social-media-plan.md)
+* [eBook: Geschenkschmuck-Guide](docs/ebook-geschenkguide.md)
 
 ## Conversion & Recht
 
 * [Conversions-Checkliste](docs/conversion-checklist.md)
 * [Rechtliche Platzhalter](docs/legal-placeholders.md)
+* [Produkt-Migration](docs/produkt-migration.md)
 * [Nächste Schritte](docs/naechste-schritte.md)
